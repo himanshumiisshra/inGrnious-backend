@@ -1,16 +1,19 @@
 require("dotenv").config();
 const ErrorHandler = require("../middlewares/ErrorHandler");
 const Note = require("../models/noteModel");
+const userModel = require("../models/userModel");
 
 const createNote = async (req, res, next) => {
     try {
+        console.log("checking for req body", req.body)
         const user = req.user;
-        const userid = user._id;
+        const userid =  req.body.userId;
 
         const { title, content } = req.body;
         if (!title || !content) {
             next(new ErrorHandler(400, "Enter all the fields"));
         }
+        console.log("checking for useriD", userid)
 
         const newNote = new Note({
             title,
@@ -35,8 +38,9 @@ const createNote = async (req, res, next) => {
 
     const getAllNotes = async (req, res, next) => {
         try {
+            console.log(req.user)
             const user = req.user;
-            const userid = user._id;
+            const userid = req.headers.userid;
             console.log("checking for user ID", userid)
 
             const allNotes = await Note.find({ user: userid });
@@ -56,14 +60,15 @@ const createNote = async (req, res, next) => {
 
     const editNotes = async (req, res, next) => {
         try {
-            const { nodeID, title, content } = req.body;
+            console.log("checking for req body", req.body)
+            const { noteID, title, content } = req.body;
 
             if (!noteID) {
                 next(new ErrorHandler(400, "id is required"));
 
             }
 
-            const note = await Note.findByid(noteID);
+            const note = await Note.findById(noteID);
             if (!note) {
                 next(new ErrorHandler(400, "No notes found with provided id"))
             }

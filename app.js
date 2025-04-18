@@ -32,4 +32,4 @@ console.log(`Connected to ${process.env.PORT}`);
 
 app.use(errorMiddleware);
 app.use(authRoutes, errorMiddleware)
-app.use(noteRoute, errorMiddleware)
+app.use("/notes",noteRoute, errorMiddleware)

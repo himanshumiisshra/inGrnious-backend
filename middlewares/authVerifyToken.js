@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const authVerifyToken = async (req, res, next) => {
     let token;
+    console.log("checking for request headers for token", req.headers)
 
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {

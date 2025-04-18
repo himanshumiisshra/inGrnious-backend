@@ -56,15 +56,15 @@ const login = async (req, res, next) => {
             return next(new ErrorHandler(400, "email and password is required"));
         }
 
-        const user = await UserActivation.findOne({ email });
-        if (!user) {
+        const usr = await user.findOne({ email });
+        if (!usr) {
             return next(new ErrorHandler(404, "User not found"))
         }
 
-        const result = await bcrypt.compare(password, user.password);
+        const result = await bcrypt.compare(password, usr.password);
 
         console.log("checking for password", password);
-        console.log("checking with saved password", user.password);
+        console.log("checking with saved password", usr.password);
 
         if (!result) return next(new ErrorHandler(400, "Invalid Credentials"));
 
@@ -78,10 +78,10 @@ const login = async (req, res, next) => {
         );
 
         return res.status(200).json({
-            id: user._id,
+            id: usr._id,
             success: true,
             msg: "Logged in successfully",
-            user,
+            usr,
             accessToken,
         });
 
