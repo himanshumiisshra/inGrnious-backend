@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
 const authRoutes = require("./routes/authRoutes");
 const { errorMiddleware } = require("./middlewares/ErrorHandler");
-// const noteRoute = require("./routes/noteRoute");
+const noteRoute = require("./routes/noteRoutes");
 
 app.get("/", (req, res) => {
     res.send("Server is live 🚀");
@@ -32,3 +32,4 @@ console.log(`Connected to ${process.env.PORT}`);
 
 app.use(errorMiddleware);
 app.use(authRoutes, errorMiddleware)
+app.use(noteRoute, errorMiddleware)
