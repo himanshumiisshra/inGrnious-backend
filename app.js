@@ -10,6 +10,8 @@ app.use(express.json());
 app.use(cors({origin: true}));
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
+const authRoutes = require("./routes/authRoutes");
+// const noteRoute = require("./routes/noteRoute");
 
 const connectDB = async () => {
     try {
