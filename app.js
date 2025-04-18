@@ -1,5 +1,5 @@
 const express = require("express");
-require("dotenv").config;
+require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const DBConnect = require("./DbConnection");
@@ -11,7 +11,12 @@ app.use(cors({origin: true}));
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
 const authRoutes = require("./routes/authRoutes");
+const { errorMiddleware } = require("./middlewares/ErrorHandler");
 // const noteRoute = require("./routes/noteRoute");
+
+app.get("/", (req, res) => {
+    res.send("Server is live 🚀");
+  });
 
 const connectDB = async () => {
     try {
@@ -23,4 +28,7 @@ const connectDB = async () => {
 }
 
 connectDB();
-console.log(`Connected to ${process.env.PORT}`)
+console.log(`Connected to ${process.env.PORT}`);
+
+app.use(errorMiddleware);
+app.use(authRoutes, errorMiddleware)

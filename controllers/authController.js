@@ -31,6 +31,7 @@ const refreshToken = (req, res, next) => {
             return next(new ErrorHandler(400, "Please login or Register"));
 
         jwt.verify(rf_token, process.env.JWT_REFRESH_KEY, (err, user) => {
+            console.log("checking with user", user)
             if (err) return next(new ErrorHandler(401, "Invalid Authentication"));
             const accessToken = createAccessToken({
                 id: user._id,
@@ -93,13 +94,11 @@ const login = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
     try {
+        console.log("checking req.body for sign up", req.body)
         const { email, password } = req.body;
 
-        const isUserExists = await User.findOne({ email: email.toLowerCase() });
 
-        if (isUserExists) {
-            return next(new ErrorHandler(400, "user by this email already exixts"))
-        }
+
 
         if (!(email && password)) {
             return next(new ErrorHandler(400, "All the input fields are required"))
@@ -117,20 +116,26 @@ const signup = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const user = new User({
+        const usr = new user({
             email,
             password: hashedPassword
         });
 
-        const savedUser = await user.save();
+        const isUserExists = await user.findOne({ email: email.toLowerCase() });
+
+        if (isUserExists) {
+            return next(new ErrorHandler(400, "user by this email already exixts"))
+        }
+
+        const savedUser = await usr.save();
         console.log("checking for saved User", savedUser)
 
-        const accessToken = createAccessToken({ id: user._id });
+        const accessToken = createAccessToken({ id: usr._id });
 
 
         const refreshToken = jwt.sign(
             {
-                id: user._id,
+                id: usr._id,
             },
             process.env.JWT_REFRESH_KEY,
             {
@@ -142,7 +147,7 @@ const signup = async (req, res, next) => {
             id: user._id,
             success: true,
             msg: `Sign up successfull`,
-            user,
+            usr,
             accessToken,
         })
 
