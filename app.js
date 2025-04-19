@@ -31,6 +31,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
+app.options("*", cors());
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
 const authRoutes = require("./routes/authRoutes");
