@@ -18,6 +18,7 @@ app.use(limiter);
 app.use(express.json());
 const allowedOrigins = ["https://front-inai.vercel.app"];
 
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -28,7 +29,7 @@ app.use(cors({
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, 
+  credentials: true,
 }));
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
