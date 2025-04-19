@@ -16,7 +16,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(express.json());
-app.use(cors({origin: true}));
+app.options("*", cors());
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
 const authRoutes = require("./routes/authRoutes");
