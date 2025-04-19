@@ -4,8 +4,17 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const DBConnect = require("./DbConnection");
 const app = express();
+const rateLimit = require("express-rate-limit");
 
 
+const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 10, // Limit each IP to 10 requests per windowMs
+    message: "Too many requests from this IP, please try again in a minute.",
+  });
+
+
+app.use(limiter);
 app.use(express.json());
 app.use(cors({origin: true}));
 app.use(express.urlencoded({extended: false}));
