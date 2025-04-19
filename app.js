@@ -16,7 +16,19 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(express.json());
-app.use(cors())
+const allowedOrigins = ["https://front-inai.vercel.app"];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+}));
 app.use(express.urlencoded({extended: false}));
 const server = app.listen(process.env.PORT);
 const authRoutes = require("./routes/authRoutes");
